@@ -9,7 +9,7 @@ output: html_document
 library(data.table)
 ```
 
-Import Data
+Import Data from files and combine they to 'data_all' valuable 
 ```{r}
 
 projectPath <-"C:\\Users\\Hao\\OneDrive\\Project\\UCI HAR Dataset\\"
@@ -21,7 +21,7 @@ data_train_y_act <- data.table(read.table('./train/y_train.txt'))
 data_train_y <- cbind(data_train_y_sub, data_train_y_act)
 ```
 
-
+Test dataset
 ```{r}
 data_test_X <- data.table(read.table('./test/X_test.txt'))
 data_test_y_sub <- data.table(read.table('./test/subject_test.txt'))
@@ -35,7 +35,7 @@ head(data_train_y)
 dim(data_train_x)
 dim(data_train_y)
 ```
-
+Reaname cols
 ```{r}
 data_train <- cbind(data_train_y, data_train_x)
 data_test <- cbind(data_test_y, data_test_X)
@@ -49,7 +49,7 @@ head(data_test)
 ```
 
 
-Merge train and test 
+Combine train and test datasets 
 ```{r}
 data_all <- rbind(data_train, data_test)
 dim(data_all)
@@ -75,14 +75,14 @@ names(result_1)<-gsub('[()]','', names(result_1))
 
 ```
 
-
+Uses descriptive activity names to name the activities in the data set
 ```{r}
 activities <- fread('./activity_labels.txt')
 setnames(activities, names(activities), c("ActivityNum", "ActivityName"))
 
 ```
 
-Merge
+Merge Activity into data_all 
 ```{r}
 data_final <- merge(activities, result_1, by = 'ActivityNum')
 ```
@@ -93,7 +93,7 @@ data_final_1<- data_final
 setkey(data_final_1, Subject, ActivityName)
 tidy_table <- data_final_1[,list(count = .N, average= mean(tBodyAcc_mean_X)), by = key(data_final_1)]
 ```
-
+Output tidy data
 
 ```{r}
 getwd()
